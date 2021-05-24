@@ -18,6 +18,8 @@ jobs:
       run: black .
     - name: Commit linted version  # By default won't retrigger a workflow
       run: |
+        git config --global user.email "black.linting@example.com"
+        git config --global user.name "Black Linting"
         git commit -am "Linted code"
         git push
     - name: Run tests
