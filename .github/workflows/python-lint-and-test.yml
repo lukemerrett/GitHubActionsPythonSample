@@ -16,11 +16,16 @@ jobs:
         pip install -U pytest
     - name: Lint code  # Can also use `black --check .` to test linting, but not apply it
       run: black .
-    - name: Commit linted version  # By default won't retrigger a workflow
+    - name: Commit linted version
+      # Checks if any changes have been made by the linter
+      # If so, commits them and pushes to the repo
+      # By default won't retrigger a workflow
       run: |
-        git config --global user.email "black.linting@example.com"
-        git config --global user.name "Black Linting"
-        git commit -am "Linted code"
-        git push
+        if ! git diff-index --quiet HEAD --; then
+          git config --global user.email "black.linting@example.com"
+          git config --global user.name "Black Linting"
+          git commit -am "Linted code"
+          git push
+        fi
     - name: Run tests
       run: pytest
